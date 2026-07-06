@@ -15,6 +15,7 @@ export default async function handler(req, res) {
   ).join('\n---\n');
 
   const systemPrompt = `You are a music product researcher analyzing real Spotify user reviews and Reddit posts. Your task is to answer 6 specific research questions about music discovery barriers.
+All analysis, insights, reasons, and text in the JSON MUST be written in English. If any input reviews or posts are in other languages, translate their core ideas and keep the output strictly in English.
 Return ONLY valid JSON. No markdown fences. No extra text. No explanation. Only the raw JSON object.`;
 
   const userPrompt = `Analyze these ${items.length} Spotify user feedback items (${appstoreCount} App Store reviews + ${redditCount} Reddit posts) and return this exact JSON:
