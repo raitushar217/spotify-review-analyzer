@@ -67,6 +67,7 @@ ${reviewText}`;
         },
         body: JSON.stringify({
           model: 'llama-3.1-8b-instant',
+          response_format: { type: "json_object" },
           messages: [
             { role: 'system', content: systemPrompt },
             { role: 'user', content: userPrompt }
@@ -76,8 +77,18 @@ ${reviewText}`;
         })
       }
     );
+
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData.error?.message || `HTTP ${response.status} from Groq`);
+    }
+
     const data = await response.json();
-    const raw = data.choices?.[0]?.message?.content || '';
+    if (!data.choices || data.choices.length === 0) {
+      throw new Error(data.error?.message || "No completions returned from Groq");
+    }
+
+    const raw = data.choices[0].message?.content || '';
     const clean = raw.replace(/```json|```/g, '').trim();
     return JSON.parse(clean);
   }
