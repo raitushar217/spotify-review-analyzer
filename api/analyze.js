@@ -8,10 +8,15 @@ export default async function handler(req, res) {
 
   const { items, appstoreCount, redditCount } = req.body;
 
-  // Truncate and format for the prompt
-  const reviewText = items.map(r =>
-    `[${r.source.toUpperCase()} | Rating: ${r.rating}] ` +
-    `${(r.content || r.title || '').slice(0, 280)}`
+  // Select a balanced sample of items to analyze (max 15 App Store and 10 Reddit) to stay safely under 6,000 tokens
+  const appstoreItems = (items || []).filter(r => r.source === 'appstore').slice(0, 15);
+  const redditItems = (items || []).filter(r => r.source === 'reddit').slice(0, 10);
+  const limitedItems = [...appstoreItems, ...redditItems];
+
+  // Truncate and format for the prompt (150 chars max per item)
+  const reviewText = limitedItems.map(r =>
+    `[${r.source.toUpperCase()} | Rating/Score: ${r.rating || r.score || 'N/A'}] ` +
+    `${(r.content || r.title || '').slice(0, 150)}`
   ).join('\n---\n');
 
   const systemPrompt = `You are a music product researcher analyzing real Spotify user reviews and Reddit posts. Your task is to answer 6 specific research questions about music discovery barriers.
