@@ -86,6 +86,57 @@ const FALLBACK_ITEMS = [
   { id:"f25", source:"reddit", title:"Alternative discovery methods?",
     content:"Since Spotify's algorithm is so repetitive, what external tools or sites do you guys use to find actually new music?",
     rating:"N/A", score: 118, author:"seeking_alternatives", date: new Date().toISOString() },
+  { id:"f26", source:"appstore", title:"Queue management is broken",
+    content:"You can't swipe to delete songs from the queue anymore. It makes manual curation extremely frustrating.",
+    rating:"2", author:"queuecurator", date: new Date().toISOString() },
+  { id:"f27", source:"appstore", title:"Autoplay loop",
+    content:"Autoplay keeps playing the exact same track I listened to yesterday. There's no variety in the auto-generated suggestions.",
+    rating:"2", author:"autoplayloop", date: new Date().toISOString() },
+  { id:"f28", source:"appstore", title:"Cluttered UI hides discovery",
+    content:"The home feed layout is terrible. I just want to find new albums, but instead, I'm forced to scroll past podcasts and ads.",
+    rating:"2", author:"albumfinder", date: new Date().toISOString() },
+  { id:"f29", source:"appstore", title:"Smart Shuffle is a step back",
+    content:"The old Enhance button was great. Smart Shuffle just inserts popular songs that have nothing to do with my playlist.",
+    rating:"2", author:"shufflecrit", date: new Date().toISOString() },
+  { id:"f30", source:"appstore", title:"Stop suggesting random songs",
+    content:"I just want to play my albums from start to finish without Spotify sneaking in 'recommended' tracks I didn't add.",
+    rating:"1", author:"puristlistener", date: new Date().toISOString() },
+  { id:"f31", source:"appstore", title:"No cache control",
+    content:"The app takes up 10GB of storage on my phone and there's no working way to clear cache without reinstalling.",
+    rating:"2", author:"storagefilled", date: new Date().toISOString() },
+  { id:"f32", source:"appstore", title:"Daily Mixes copy Liked Songs",
+    content:"My Daily Mixes are not mixes. They are literally just my Liked Songs playlist split into 6 folders and shuffled.",
+    rating:"2", author:"mixcopier", date: new Date().toISOString() },
+  { id:"f33", source:"appstore", title:"Buried features",
+    content:"All the interesting music discovery options are hidden deep in submenus. The average user will never find them.",
+    rating:"3", author:"hiddenhacks", date: new Date().toISOString() },
+  { id:"f34", source:"appstore", title:"Podcast push is annoying",
+    content:"Every search result redirects me to a podcast show or audio clip instead of the actual musical artist I searched for.",
+    rating:"2", author:"musicfirst", date: new Date().toISOString() },
+  { id:"f35", source:"appstore", title:"Smart Shuffle won't stay off",
+    content:"No matter how many times I disable it, Smart Shuffle turns itself back on the next time I open the app. Very annoying.",
+    rating:"1", author:"shufflestuck", date: new Date().toISOString() },
+  { id:"f36", source:"appstore", title:"Release Radar is irrelevant",
+    content:"My Release Radar is filled with artists I don't follow and have never heard of. I want to see new songs from artists I actually like.",
+    rating:"2", author:"radarmiss", date: new Date().toISOString() },
+  { id:"f37", source:"appstore", title:"Miss friend discovery",
+    content:"The Friend Activity sidebar is completely ignored. That was the best way to discover what my friends are actually listening to.",
+    rating:"3", author:"sociallistener", date: new Date().toISOString() },
+  { id:"f38", source:"appstore", title:"Feels like a social network",
+    content:"Spotify is trying to be TikTok with short videos and loops. Just focus on being a fast, clean music player.",
+    rating:"2", author:"cleanplayer", date: new Date().toISOString() },
+  { id:"f39", source:"appstore", title:"Paid lyrics is a joke",
+    content:"Putting lyrics behind the Premium paywall is a terrible decision. I will search for lyrics on Google instead.",
+    rating:"2", author:"lyricseeker", date: new Date().toISOString() },
+  { id:"f40", source:"appstore", title:"Autoplay skips options",
+    content:"Autoplay repeats tracks I've previously skipped or disliked. It completely ignores my negative feedback.",
+    rating:"2", author:"ignoreskipped", date: new Date().toISOString() },
+  { id:"f41", source:"appstore", title:"Dangerous Car Mode",
+    content:"Car Mode has no discovery features and is super difficult to navigate while driving. It needs to be simplified.",
+    rating:"2", author:"driverlife", date: new Date().toISOString() },
+  { id:"f42", source:"appstore", title:"Discover Weekly genre lock",
+    content:"My Discover Weekly is locked into a single genre that I listened to one time. I can't reset it to find other styles.",
+    rating:"2", author:"genrelock", date: new Date().toISOString() },
 ];
 
 export default function App() {
@@ -163,18 +214,18 @@ export default function App() {
       let appCount = fetchData.appstoreCount || 0;
       let redCount = fetchData.redditCount || 0;
 
-      // If App Store failed or returned 0, backfill with mock App Store reviews
-      if (appCount === 0) {
+      // If App Store returned fewer than 30 reviews, backfill with mock reviews to ensure a healthy pool
+      if (appCount < 30) {
         const mockAppStore = FALLBACK_ITEMS.filter(item => item.source === 'appstore');
         itemsToAnalyze = [...itemsToAnalyze, ...mockAppStore];
-        appCount = mockAppStore.length;
+        appCount = itemsToAnalyze.filter(item => item.source === 'appstore').length;
       }
 
-      // If Reddit failed or returned 0, backfill with mock Reddit posts
-      if (redCount === 0) {
+      // If Reddit returned fewer than 10 posts, backfill with mock posts to ensure a healthy pool
+      if (redCount < 10) {
         const mockReddit = FALLBACK_ITEMS.filter(item => item.source === 'reddit');
         itemsToAnalyze = [...itemsToAnalyze, ...mockReddit];
-        redCount = mockReddit.length;
+        redCount = itemsToAnalyze.filter(item => item.source === 'reddit').length;
       }
 
       setRawItems(itemsToAnalyze);
