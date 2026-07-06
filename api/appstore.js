@@ -2,7 +2,7 @@
 // Fetches real Spotify App Store reviews from the iTunes RSS feed
 // Tries multiple country stores to maximize review count
 
-const COUNTRY_CODES = ['us', 'gb', 'za', 'in', 'au', 'ca', 'de', 'fr', 'br', 'mx'];
+const COUNTRY_CODES = ['us', 'gb', 'ca', 'au', 'nz', 'ie', 'in', 'sg', 'za', 'de', 'fr', 'br', 'mx'];
 const SPOTIFY_APP_ID = '324684580';
 
 async function fetchReviewsForCountry(cc, page = 1) {
